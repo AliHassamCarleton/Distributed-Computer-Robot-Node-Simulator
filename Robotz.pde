@@ -1,7 +1,4 @@
-/*
-    Author: Alexandre Skipper
-    Date: November 2017
-*/
+//Alnoor, Ali, Grayson
 
 import java.util.ArrayList;
 import java.io.FileReader;

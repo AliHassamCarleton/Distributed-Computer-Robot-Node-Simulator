@@ -1,3 +1,4 @@
+//Alnoor, Ali, Grayson
 
 public static enum nodeDirection { LEFT, RIGHT };
 
@@ -37,8 +38,6 @@ public class Robot {
           i++;
 
         }
-
-
 
     }
 
