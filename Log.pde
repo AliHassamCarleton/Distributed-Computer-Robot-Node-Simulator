@@ -1,3 +1,4 @@
+//Alnoor, Ali, Grayson
 
 
 class Log {
@@ -9,7 +10,7 @@ class Log {
 
         counter = 1;
         journalList = new ArrayList<String>();
-        journalList.add("Robot Count: " + str(rcount) + "," +"Node Count: " + str(ncount) + "," + "Robot Speed: " + str(speed));
+        journalList.add("Robot Count: " + str(rcount) + ","  +"Node Count: " + str(ncount) + "," + "Robot Speed: " + str(speed));
 
     }
 
