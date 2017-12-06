@@ -1,7 +1,4 @@
-/*
-    Author: Alexandre Skipper
-    Date: November 2017
-*/
+//Alnoor, Ali, Grayson
 
 import java.util.ArrayList;
 import java.io.FileReader;
@@ -46,7 +43,7 @@ void readConfig() {
     try {
         br = new BufferedReader(new FileReader(new File(sketchPath("config.cfg"))));
         String line = br.readLine();
-        runGUI = true;
+        runGUI = Integer.parseInt(line) == 0 ? false : true;
 
         testCases = new ArrayList< ArrayList<Integer> >();
         line = br.readLine();
