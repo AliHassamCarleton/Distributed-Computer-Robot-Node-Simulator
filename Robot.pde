@@ -1,3 +1,4 @@
+//Alnoor, Ali, Grayson
 
 public static enum nodeDirection { LEFT, RIGHT };
 
@@ -16,7 +17,7 @@ public class Robot {
         intSpeed = s;
         tally = 1;
         radius = currentNode.getRadius() + 20;
-        myColor = color(floor(random(256)), floor(random(256)), floor(random(256)));
+        myColor = color(0, 0, 0);
     }
 
     public void update() {
@@ -37,8 +38,6 @@ public class Robot {
           i++;
 
         }
-
-
 
     }
 
