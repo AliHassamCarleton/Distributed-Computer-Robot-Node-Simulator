@@ -1,7 +1,4 @@
-/*
-    Author: Alexandre Skipper
-    Date: November 2017
-*/
+//Alnoor, Ali, Grayson
 
 import java.util.ArrayList;
 import java.io.FileReader;
@@ -10,51 +7,64 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 //Window params
-int[] screen = { 1080, 1080 };
-float screenX, screenY;
-int sensitivity = 50;
+int[] screen = { 1080, 600 };
+float displayX, screenY;
 
 //some global variables
 Ring ring;
-int robots, nodes, speed, delay; //robot and node counts, robot speed, delay between frames
-boolean runGUI = false;
-ArrayList< ArrayList<Integer> > testCases;
 
-//initial screen settings
+int speed, delay;
+int nodes, robots;
+
+Button[] buttons = { new Button("Add Bot", 20, 60, 100, 50),
+                     new Button("Delete Bot", 20, 120, 100, 50),
+                     new Button("Add Node", 20, 180, 100, 50),
+                     new Button("Delete Node", 20, 240, 100, 50),
+                     new Button("Inc Speed", 20, 300, 100, 50),
+                     new Button("Dec Speed", 20, 360, 100, 50),
+                     new Button("RESTART", 20, 530, 100, 50) };
+
+boolean runGUI = false;
+
+ArrayList< ArrayList<Integer> > testList;
+
 void settings() {
     size(screen[0], screen[1]);
 }
 
-//setup the simulation
 void setup() {
-    screenX = screen[0]/2;
+
+    robots = 5;
+    nodes = 20;
+
+    delay = 200;
+    speed = 1;
+    displayX = screen[0]/2;
     screenY = screen[1]/2;
     frameRate(30);
 
-    delay = 250;
-    robots = 3;
-    nodes = 15;
-    speed = 1;
     ring = new Ring(robots, nodes, speed);
 
-    readConfig();
+    testcaseReader();
 }
 
 //read test cases and settings from config file
-void readConfig() {
+void testcaseReader() {
     BufferedReader br = null;
-    try {
-        br = new BufferedReader(new FileReader(new File(sketchPath("config.cfg"))));
-        String line = br.readLine();
-        runGUI = true;
 
-        testCases = new ArrayList< ArrayList<Integer> >();
-        line = br.readLine();
+    try {
+        br = new BufferedReader(new FileReader(new File(sketchPath("testcases.txt"))));
+        String line = br.readLine();
+        runGUI = Integer.parseInt(line) == 0 ? false : true;
+        testList = new ArrayList< ArrayList<Integer> >();
+
+        line = br.readLine(); //read current line on txt file
         while (line != null) {
             ArrayList<Integer> testCase = new ArrayList<Integer>();
+
             for (String i : line.split(","))
                 testCase.add(Integer.parseInt(i));
-            testCases.add(testCase);
+            testList.add(testCase);
 
             line = br.readLine();
         }
@@ -85,11 +95,11 @@ void draw() {
 
 //run test cases without the GUI
 void runTestCases() {
-    for (int i=0; i<testCases.size(); i++) {
-        Log log = new Log(testCases.get(i).get(0), testCases.get(i).get(1), testCases.get(i).get(2));
+    for (int i=0; i<testList.size(); i++) {
+        Log log = new Log(testList.get(i).get(0), testList.get(i).get(1), testList.get(i).get(2));
 
-        for (int j=0; j<testCases.get(i).get(3); j++) {
-            ring = new Ring(testCases.get(i).get(0), testCases.get(i).get(1), testCases.get(i).get(2));
+        for (int j=0; j<testList.get(i).get(3); j++) {
+            ring = new Ring(testList.get(i).get(0), testList.get(i).get(1), testList.get(i).get(2));
             ring.doTest();
             log.addtoJournal(str(ring.getiters()));
         }
@@ -101,37 +111,79 @@ void runTestCases() {
 
 //draw the UI
 void drawGUI() {
+    PFont font;
+    font = createFont("Comic.ttf", 32);
+    textFont(font);
+    for (int i = 0; i < buttons.length; i++) { buttons[i].Draw(); }
     textSize(32);
     textAlign(CENTER);
-    text("Delay (F-, R+): " + str(delay), screen[0]/2, screen[1]/2 - 128);
-    text("Robots (A-, Q+): " + str(robots), screen[0]/2, screen[1]/2 - 64);
-    text("Nodes (S-, W+): " + str(nodes), screen[0]/2, screen[1]/2);
-    text("Speed (D-, E+): " + str(speed), screen[0]/2, screen[1]/2 + 64);
-    text("Enter to create a new ring", screen[0]/2, screen[1]/2 + 128);
+    text("Robots: " + str(robots), 950, screen[1]/2 - 64);
+    text("Nodes: " + str(nodes), 950, screen[1]/2);
+    text("Speed: " + str(speed), 950, screen[1]/2 + 64);
     textAlign(LEFT, TOP);
-    text("Iterations: " + str(ring.getiters()), 5, 5);
+    fill(255, 0, 0);
+    text("# Rounds: " + str(ring.getiters()), 850, 450);;
+    String[] fontList = PFont.list();
+    font = createFont("stocky.ttf", 32);
+    textFont(font);
+    fill(0,0,255);
+    text("ROBOT RENDEZVOUS ", 350, 275);
 }
 
 //draw the ring (nodes & robots)
 void drawRing(Ring r) {
     pushMatrix();
-    translate(screenX, screenY);
+    translate(displayX, screenY);
     r.draw();
     popMatrix();
 }
 
-//check for user input
-void keyPressed() {
-    final int k = keyCode;
+// the Button class
+class Button {
+  String label; // button label
+  float x;      // top left corner x position
+  float y;      // top left corner y position
+  float w;      // width of button
+  float h;      // height of button
 
-    if (k == 'A' && robots > 1) robots -= 1;
-    if (k == 'Q') robots += 1;
-    if (k == 'S' && nodes > 1) nodes -= 1;
-    if (k == 'W') nodes += 1;
-    if (k == 'D' && speed > 1) speed -= 1;
-    if (k == 'E') speed += 1;
-    if (k == 'F' && delay >= 10) delay -= 10;
-    if (k == 'R') delay += 10;
+  // constructor
+  Button(String labelB, float xpos, float ypos, float widthB, float heightB) {
+    label = labelB;
+    x = xpos;
+    y = ypos;
+    w = widthB;
+    h = heightB;
+  }
 
-    if (k == ENTER) ring = new Ring(robots, nodes, speed);
+  void Draw() {
+    fill(218);
+    stroke(141);
+    rect(x, y, w, h, 10);
+    textAlign(CENTER, CENTER);
+    fill(0);
+    textSize(14);
+    text(label, x + (w / 2), y + (h / 2));
+  }
+
+  boolean MouseIsOver() {
+    if (mouseX > x && mouseX < (x + w) && mouseY > y && mouseY < (y + h)) {
+      return true;
+    }
+    return false;
+  }
+}
+
+void mousePressed()
+{
+  for (int i=0; i< buttons.length; i++) {
+    if (buttons[i].MouseIsOver()) {
+      if (buttons[i].label == "Add Bot") robots++;
+      if (buttons[i].label == "Delete Bot" && robots > 1) robots -= 1;
+      if (buttons[i].label == "Add Node") nodes++;
+      if (buttons[i].label == "Delete Node" && nodes > 1) nodes -= 1;
+      if (buttons[i].label == "Inc Speed") speed++;
+      if (buttons[i].label == "Dec Speed" && speed > 1) speed -= 1;
+      if (buttons[i].label == "RESTART") ring = new Ring(robots, nodes, speed);
+     }
+  }
 }
