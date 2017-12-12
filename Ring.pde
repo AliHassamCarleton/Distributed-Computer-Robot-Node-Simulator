@@ -1,10 +1,11 @@
-//Alnoor, Ali, Grayson
+//Dream Team:Alnoor, Ali, Grayson
 
-public class Ring {
 
-    private ArrayList<Robot> robots;
-    private int robotSpeed, iters, numberofRobots, numberofNodes;
-    private ArrayList<Node> nodes;
+public class Ring { //creates ring for nodes to be placed, and robots to traverse 
+
+    private ArrayList<Robot> robots; //create ArrayList for the robots 
+    private int robotSpeed, iters, numberofRobots, numberofNodes; 
+    private ArrayList<Node> nodes; //create ArrayList for the nodes
 
     public Ring(int numrobs, int numnodes, int speed) {
 
@@ -16,9 +17,9 @@ public class Ring {
         robotSpeed = speed;
         iters = 0;
 
-        float testr = 360/(float)numberofNodes;
+        float testr = 360/(float)numberofNodes; //create the ring of nodes 
         float  half = screen[1]/2 - 50;
-        nodes.add(new Node(0, cos(radians(testr*0))* half, sin(radians(testr*0))* half));
+        nodes.add(new Node(0, cos(radians(testr*0))* half, sin(radians(testr*0))* half)); //spread out all the nodes evenly around the ring 
 
         int i=1;
         while (i<numberofNodes){
@@ -75,14 +76,17 @@ public class Ring {
         while (robots.size() > 1) {
 
             iters++;
-            for (Robot r : robots) r.update();
+
+            for (Robot r : robots){
+              r.update();
+            }
+
             updateRobots();
 
         }
-
+        
     }
 
-    //move the robots
     public void updatePosition() {
 
         if (robots.size() > 1){
@@ -101,11 +105,14 @@ public class Ring {
           n.draw();
         }
 
+        int i=robots.size()-1;
 
-        for (int i=robots.size()-1; i>=0; i--) robots.get(i).draw();
+        while (i>=0){
 
+          robots.get(i).draw();
 
-
+          i--;
+        }
     }
 
     public boolean updateRobots() {
@@ -113,22 +120,35 @@ public class Ring {
         if (robots.size() == 1) {
             return false;
         }
+
+
         ArrayList<Robot> newList = new ArrayList<Robot>();
 
         while (robots.size() > 0) {
-            Robot currRobot = robots.get(0);
 
-            for (int j=1; j<robots.size(); j++) {
-                if (nodeGap(currRobot.getNode(), robots.get(j).getNode(), robotSpeed)) {
-                    currRobot.eat(robots.get(j));
-                    robots.remove(j--);
+            Robot currentRobot = robots.get(0);
+
+            int j=1;
+
+            while (j<robots.size()){
+
+              if (nodeGap(currentRobot.getNode(), robots.get(j).getNode(), robotSpeed)) {
+
+                  currentRobot.eat(robots.get(j));
+                  robots.remove(j--);
+
                 }
+              j++;
+
             }
-            newList.add(currRobot);
+
+            newList.add(currentRobot);
             robots.remove(0);
+
         }
         robots = newList;
         return true;
+
     }
 
     private boolean nodeGap(Node n1, Node n2, int distance) {
@@ -136,15 +156,25 @@ public class Ring {
           return true;
 
         Node temp = n1;
-        for (int i=0; i<distance; i++) {
-            temp = temp.getLeft();
-            if (temp == n2) return true;
+
+        int i=0;
+
+        while (i<distance){
+
+          temp = temp.getLeft();
+          if (temp == n2) return true;
+          i++;
+
         }
 
         temp = n1;
-        for (int i=0; i<distance; i++) {
-            temp = temp.getRight();
-            if (temp == n2) return true;
+
+        i=0;
+
+        while (i<distance){
+          temp = temp.getRight();
+          if (temp == n2) return true;
+          i++;
         }
 
         return false;

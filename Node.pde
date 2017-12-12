@@ -1,5 +1,7 @@
+//Dream Team:Alnoor, Ali, Grayson
 
-public class Node {
+
+public class Node { //creates individual nodes to be placed on the ring 
 
     private float x, y, radius;
 

@@ -1,3 +1,4 @@
+//Dream Team:Alnoor, Ali, Grayson
 
 
 class Log {
@@ -9,25 +10,27 @@ class Log {
 
         counter = 1;
         journalList = new ArrayList<String>();
-        journalList.add("Robot Count: " + str(rcount) + "," +"Node Count: " + str(ncount) + "," + "Robot Speed: " + str(speed));
+        journalList.add("Settings used:\n");
+        journalList.add("# of Robots: " + str(rcount) + "|\n"  +"# of Nodes: " + str(ncount) + "|\n" + "Speed: " + str(speed)+"\n\n");
+        
 
     }
 
     public void addtoJournal(String strIn) {
 
-        journalList.add(str(counter++) + "," + strIn);
+        journalList.add("test #" +str(counter++) + "  |  rounds needed: " + strIn);
 
     }
 
-    public void saveToFile() {
+    public void saveToFile() { //creates testlogs
 
         String[] outStrings = journalList.toArray(new String[journalList.size()]);
         int fileID = 0;
 
-        while ((new File(sketchPath("logs\\log" + str(fileID) + ".csv"))).getAbsoluteFile().exists())
+        while ((new File(sketchPath("testcases results/test" + str(fileID) + ".txt"))).getAbsoluteFile().exists())
             fileID++;
 
-        saveStrings("logs\\log" + str(fileID) + ".csv", outStrings);
+        saveStrings("testcases results//test" + str(fileID) + ".txt", outStrings);
     }
 
 }
